@@ -34,6 +34,9 @@ export class CompanyController {
   @UseGuards(FirebaseAuthGuard)
   async findAll(@Request() req) {
     const user = await this.userService.findOneByUid(req.user.uid);
+    if (!user) {
+      throw new NotFoundException('Invalid or Expired token');
+    }
     if (user.user_type !== 'admin') {
       throw new NotFoundException('You are not allowed to perform this action');
     }
